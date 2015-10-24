@@ -4,7 +4,7 @@
 'use strict';
 
 angular.module('musicPlayer')
-  .controller('musicCtrl', ['$scope', '$cordovaMedia', '$ionicLoading', function($scope, $cordovaMedia, $ionicLoading) {
+  .controller('MusicCtrl', ['$scope', '$cordovaMedia', '$ionicLoading', function($scope, $cordovaMedia, $ionicLoading) {
 
     document.addEventListener("deviceready", onDeviceReady, false);
 
@@ -21,14 +21,21 @@ angular.module('musicPlayer')
         songSrc: 'android_assets/www/mp3/Tongues_Remix.mp3',
         songName: 'Tongues (Remix)',
         songArtist: 'Joywave'
-      }, {
-        songSrc: 'android_assets/www/mp3/Redux.mp3',
-        songName: 'Redux',
-        songArtist: 'Approaching Nirvana'
       }
     ];
 
+    /*
+     * temps
+     */
+    var tmpSrc = 'mp3/Tongues_Remix.mp3';
+    var tmpMedia = null;
+
     $scope.ppButt = 'play';
+    $scope.media = ''/*new Media($scope.playlist[0].songSrc, function() {
+      console.log('init success');
+    }, function(err) {
+      console.log('init err: %o', err);
+    }, mediaStatusCallback)*/;
 
     /**
      * play the song
@@ -36,6 +43,15 @@ angular.module('musicPlayer')
      */
     $scope.playSong = function(src) {
       console.log('playing from: %o', src);
+      if (tmpMedia === null) {
+        tmpMedia = new Media(tmpSrc, function() {//$cordovaMedia.newMedia(tmpSrc, function () {
+          console.log('tmpMedia success!');
+        }, function (err) {
+          console.log('tmpMedia err: %o', err);
+        }, mediaStatusCallback);
+      }
+      tmpMedia.play();
+      /*
       $scope.media = new Media(src, function() {
         // success callback
         console.log('success');
@@ -48,6 +64,7 @@ angular.module('musicPlayer')
       $scope.media = media;
 
       $cordovaMedia.play(media);
+      */
     };
 
     /**
@@ -96,7 +113,8 @@ angular.module('musicPlayer')
 
     function onDeviceReady() {
       console.log('onDeviceReady...');
-      console.log(Media);
+
+      //console.log(Media);
     }
 
 }]);
